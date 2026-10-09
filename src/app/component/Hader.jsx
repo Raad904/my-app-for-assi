@@ -23,10 +23,10 @@ const HaderPage = () => {
         <header className="w-full border border-white bg-white">
             <div className="container-width flex items-center justify-between">
 
-                {/* Left Side */}
+              
                 <div className="flex items-center gap-3">
 
-                    {/* Logo */}
+             
                     <div className="w-10 h-10 bg-green-200 rounded-lg flex items-center justify-center">
                         <Image
                             src="/image/logo-icon.png"
@@ -36,7 +36,7 @@ const HaderPage = () => {
                         />
                     </div>
 
-                    {/* Title + Date */}
+                   
                     <div>
                         <h1 className="text-xl font-bold text-gray-900">
                             বাতার ঘর
@@ -48,7 +48,7 @@ const HaderPage = () => {
                     </div>
                 </div>
 
-                {/* Right Side */}
+                
                 <div className="flex items-center gap-6">
                     <button className="text-sm font-medium text-gray-700 hover:text-green-600">
                         সাইন ইন

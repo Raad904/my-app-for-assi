@@ -17,17 +17,17 @@ const NavBarPage = async () => {
     return (
         <nav className="border-y border-gray-200 bg-white">
             <div className="container-width mx-auto flex items-center gap-5 overflow-x-auto py-3">
-                {data.map((e) => (
+                {data.map((i) => (
                     <Link
-                        key={e.id}
-                        href={`/${e.slug}`}
+                        key={i.id}
+                        href={`/${i.slug}`}
                         className="flex shrink-0 items-center gap-2 text-sm font-medium text-gray-700 transition hover:text-green-600"
                     >
                         <span className="text-base">
-                            {e.icon}
+                            {i.icon}
                         </span>
 
-                        <span>{e.nameBn}</span>
+                        <span>{i.nameBn}</span>
                     </Link>
                 ))}
             </div>
