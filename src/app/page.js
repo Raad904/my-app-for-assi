@@ -1,9 +1,9 @@
 import React from 'react';
 import MarqueePage from './component/Marquee';
 import HeroSectionPage from './component/HeroSection';
-import IncreasedProPage from './component/IncreasedPro';
-import DecreasedProPage from './component/DecreasedPro';
-import AllProductPage from './component/AllProduct';
+import IncreasedProPage from './IncreasedPro/page';
+import DecreasedProPage from './DecreasedPro/page';
+import AllProductPage from './AllProduct/page';
 
 const page = () => {
   return (
