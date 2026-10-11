@@ -1,11 +1,13 @@
+
 "use cache";
 
-import Link from "next/link";
 import React from "react";
+import { Suspense } from "react";
+import NavLinks from "./NavLinks";
 
 const NavBarPage = async () => {
     const res = await fetch(
-        "https://api.abcz.workers.dev/api/bazardor/categories"
+        "https://openapi.programming-hero.com/api/bazardor/categories"
     );
 
     if (!res.ok) {
@@ -15,21 +17,11 @@ const NavBarPage = async () => {
     const data = await res.json();
 
     return (
-        <nav className="border-y border-gray-200 bg-white">
+        <nav className="sticky top-[40px] z-40 border-y border-gray-200 bg-white">
             <div className="container-width mx-auto flex items-center gap-5 overflow-x-auto py-3">
-                {data.map((i) => (
-                    <Link
-                        key={i.id}
-                        href={`/${i.slug}`}
-                        className="flex shrink-0 items-center gap-2 text-sm font-medium text-gray-700 transition hover:text-green-600"
-                    >
-                        <span className="text-base">
-                            {i.icon}
-                        </span>
-
-                        <span>{i.nameBn}</span>
-                    </Link>
-                ))}
+                <Suspense fallback={<div className="py-3" />}>
+                    <NavLinks data={data} />
+                </Suspense>
             </div>
         </nav>
     );

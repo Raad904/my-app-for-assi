@@ -2,6 +2,7 @@ import { Noto_Serif_Bengali } from "next/font/google";
 import "./globals.css";
 import NavBarPage from "./component/NavBar";
 import HaderPage from "./component/Hader";
+import FoderPage from "./component/Foder";
 
 const notoSerifBengali = Noto_Serif_Bengali({
 
@@ -26,6 +27,7 @@ export default function RootLayout({ children }) {
         <main>
           {children}
         </main>
+        <FoderPage></FoderPage>
       </body>
     </html>
   );

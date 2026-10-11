@@ -1,15 +1,15 @@
-
-"use cache";
+"use cache"
+export const instant = false;
 
 import React from "react";
 import MarqueeText from "react-marquee-text"
 import "react-marquee-text/dist/styles.css"
 
 const MarqueePage = async () => {
-    const res = await fetch(
-        "https://api.abcz.workers.dev/api/bazardor/products"
-    );
-
+  const res = await fetch(
+    "https://openapi.programming-hero.com/api/bazardor/products",
+    { cache: "no-store" }
+);
     if (!res.ok) {
         throw new Error("Failed to fetch products");
     }
@@ -18,7 +18,7 @@ const MarqueePage = async () => {
 
     return (
      <MarqueeText direction="right" >
-            <div className="overflow-hidden whitespace-nowrap bg-green-50 py-3">
+            <div className="overflow-hidden whitespace-nowrap py-3">
                 <div className="flex gap-8">
                     {data.map((i) => (
                         <span
