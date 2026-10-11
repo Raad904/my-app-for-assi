@@ -53,13 +53,16 @@ const HaderPage = () => {
 
 
             <div className="flex items-center gap-6">
+                <Link href="/sign-in">
                 <button className="text-sm font-medium text-gray-700 hover:text-green-600">
                     সাইন ইন
                 </button>
-
+                </Link>
+                <Link href="/sign-up">
                 <button className="rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md hover:bg-green-700 transition">
                     সাইন আপ
                 </button>
+                </Link>
             </div>
 
         </div>
