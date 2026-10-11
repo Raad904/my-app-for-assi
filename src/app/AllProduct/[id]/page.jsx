@@ -1,11 +1,29 @@
-
 export const instant = false;
-
 import React from "react";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
+
+// export const dynamic = "force-dynamic";
 
 const DetailsPage = async ({ params }) => {
     const { id } = await params;
 
+    // Check whether the user is signed in
+    const session = await auth.api.getSession({
+        headers: await headers(),
+    });
+
+    // Redirect unsigned users to sign-in
+    if (!session) {
+        redirect(
+            `/sign-in?callbackURL=${encodeURIComponent(
+                `/AllProduct/${id}`
+            )}`
+        );
+    }
+
+    // Fetch product details
     const res = await fetch(
         `https://openapi.programming-hero.com/api/bazardor/products/${id}`,
         { cache: "no-store" }
@@ -19,6 +37,27 @@ const DetailsPage = async ({ params }) => {
     const markets = data.markets || [];
 
     const difference = data.today - data.yesterday;
+
+    const minPrices = markets
+        .map((market) => Number(market.min))
+        .filter(Number.isFinite);
+
+    const maxPrices = markets
+        .map((market) => Number(market.max))
+        .filter(Number.isFinite);
+
+    const minPrice = minPrices.length ? Math.min(...minPrices) : 0;
+    const maxPrice = maxPrices.length ? Math.max(...maxPrices) : 0;
+
+    const averagePrice = markets.length
+        ? Math.round(
+            markets.reduce(
+                (sum, market) =>
+                    sum + (Number(market.min) + Number(market.max)) / 2,
+                0
+            ) / markets.length
+        )
+        : 0;
 
     return (
         <main className="min-h-screen bg-[#f0f5f0] py-5">
@@ -37,13 +76,26 @@ const DetailsPage = async ({ params }) => {
                             </h1>
 
                             <p className="mt-1 text-xs text-gray-500">
-                                {data.categoryNameBn} · প্রতি {data.unit === "kg" ? "কেজি" : data.unit}
+                                {data.categoryNameBn} · প্রতি{" "}
+                                {data.unit === "kg" ? "কেজি" : data.unit}
                             </p>
 
                             <p className="mt-2 text-xs text-gray-700">
                                 গতকালের তুলনায় আজ দাম{" "}
-                                <span className={difference > 0 ? "text-red-600" : difference < 0 ? "text-green-600" : "text-blue-500"}>
-                                    {difference > 0 ? "বেড়েছে" : difference < 0 ? "কমেছে" : "অপরিবর্তিত"}
+                                <span
+                                    className={
+                                        difference > 0
+                                            ? "text-red-600"
+                                            : difference < 0
+                                                ? "text-green-600"
+                                                : "text-blue-500"
+                                    }
+                                >
+                                    {difference > 0
+                                        ? "বেড়েছে"
+                                        : difference < 0
+                                            ? "কমেছে"
+                                            : "অপরিবর্তিত"}
                                 </span>
                                 {" · "}
                                 {Math.abs(difference).toLocaleString("bn-BD")} টাকা
@@ -53,16 +105,29 @@ const DetailsPage = async ({ params }) => {
 
                     <div className="rounded-xl bg-[#f0f5f0] px-5 py-3 text-center sm:min-w-24">
                         <p className="text-xs text-gray-500">আজকের দাম</p>
+
                         <p className="text-2xl font-bold text-[#202a23]">
                             {data.today?.toLocaleString("bn-BD")}
                         </p>
+
                         <p className="text-[11px] text-gray-500">
                             টাকা / {data.unit === "kg" ? "কেজি" : data.unit}
                         </p>
 
-                        <p className={`mt-1 text-xs font-semibold ${data.change?.dir === "up" ? "text-red-600" : data.change?.dir === "down" ? "text-green-600" : "text-blue-500"}`}>
-                            {data.change?.dir === "up" ? "▲" : data.change?.dir === "down" ? "▼" : "--"}{" "}
-                            {data.change?.pct?.toLocaleString("bn-BD")}%
+                        <p
+                            className={`mt-1 text-xs font-semibold ${data.change?.dir === "up"
+                                    ? "text-red-600"
+                                    : data.change?.dir === "down"
+                                        ? "text-green-600"
+                                        : "text-blue-500"
+                                }`}
+                        >
+                            {data.change?.dir === "up"
+                                ? "▲"
+                                : data.change?.dir === "down"
+                                    ? "▼"
+                                    : "--"}{" "}
+                            {data.change?.pct?.toLocaleString("bn-BD") ?? 0}%
                         </p>
                     </div>
                 </section>
@@ -75,20 +140,30 @@ const DetailsPage = async ({ params }) => {
 
                     <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
                         <div className="rounded-xl border border-[#e3eae3] p-3.5">
-                            <p className="text-xs text-gray-500">সর্বনিম্ন দাম</p>
-                            <p className="mt-1 text-lg font-bold text-green-600">
-                                {Math.min(...markets.map((m) => m.min)).toLocaleString("bn-BD")} <span className="text-xs font-normal">টাকা</span>
+                            <p className="text-xs text-gray-500">
+                                সর্বনিম্ন দাম
                             </p>
+
+                            <p className="mt-1 text-lg font-bold text-green-600">
+                                {minPrice.toLocaleString("bn-BD")}{" "}
+                                <span className="text-xs font-normal">টাকা</span>
+                            </p>
+
                             <p className="text-[10px] text-gray-500">
                                 সবচেয়ে কম দামের বাজার
                             </p>
                         </div>
 
                         <div className="rounded-xl border border-[#e3eae3] p-3.5">
-                            <p className="text-xs text-gray-500">সর্বোচ্চ দাম</p>
-                            <p className="mt-1 text-lg font-bold text-red-600">
-                                {Math.max(...markets.map((m) => m.max)).toLocaleString("bn-BD")} <span className="text-xs font-normal">টাকা</span>
+                            <p className="text-xs text-gray-500">
+                                সর্বোচ্চ দাম
                             </p>
+
+                            <p className="mt-1 text-lg font-bold text-red-600">
+                                {maxPrice.toLocaleString("bn-BD")}{" "}
+                                <span className="text-xs font-normal">টাকা</span>
+                            </p>
+
                             <p className="text-[10px] text-gray-500">
                                 সবচেয়ে বেশি দামের বাজার
                             </p>
@@ -96,9 +171,12 @@ const DetailsPage = async ({ params }) => {
 
                         <div className="rounded-xl border border-[#e3eae3] p-3.5">
                             <p className="text-xs text-gray-500">গড় দাম</p>
+
                             <p className="mt-1 text-lg font-bold text-green-600">
-                                {Math.round(markets.reduce((sum, m) => sum + (m.min + m.max) / 2, 0) / markets.length).toLocaleString("bn-BD")} <span className="text-xs font-normal">টাকা</span>
+                                {averagePrice.toLocaleString("bn-BD")}{" "}
+                                <span className="text-xs font-normal">টাকা</span>
                             </p>
+
                             <p className="text-[10px] text-gray-500">
                                 প্রতি {data.unit === "kg" ? "কেজি" : data.unit}-এর হিসাবে
                             </p>
@@ -116,9 +194,15 @@ const DetailsPage = async ({ params }) => {
                                 <tr>
                                     <th className="px-3 py-3 font-semibold">বাজার</th>
                                     <th className="px-3 py-3 font-semibold">বিভাগ</th>
-                                    <th className="px-3 py-3 text-right font-semibold">সর্বনিম্ন</th>
-                                    <th className="px-3 py-3 text-right font-semibold">সর্বোচ্চ</th>
-                                    <th className="px-3 py-3 text-right font-semibold">গড়</th>
+                                    <th className="px-3 py-3 text-right font-semibold">
+                                        সর্বনিম্ন
+                                    </th>
+                                    <th className="px-3 py-3 text-right font-semibold">
+                                        সর্বোচ্চ
+                                    </th>
+                                    <th className="px-3 py-3 text-right font-semibold">
+                                        গড়
+                                    </th>
                                 </tr>
                             </thead>
 
@@ -128,21 +212,44 @@ const DetailsPage = async ({ params }) => {
                                         key={`${market.market}-${index}`}
                                         className="border-t border-[#dfe7df] even:bg-[#f0f5f0] hover:bg-[#e8f0e8]"
                                     >
-                                        <td className="px-3 py-3">{market.market}</td>
-                                        <td className="px-3 py-3">{market.division}</td>
-                                        <td className="px-3 py-3 text-right">
-                                            {market.min.toLocaleString("bn-BD")} টাকা
+                                        <td className="px-3 py-3">
+                                            {market.market}
                                         </td>
-                                        <td className="px-3 py-3 text-right">
-                                            {market.max.toLocaleString("bn-BD")} টাকা
+
+                                        <td className="px-3 py-3">
+                                            {market.division}
                                         </td>
+
+                                        <td className="px-3 py-3 text-right">
+                                            {Number(market.min).toLocaleString("bn-BD")} টাকা
+                                        </td>
+
+                                        <td className="px-3 py-3 text-right">
+                                            {Number(market.max).toLocaleString("bn-BD")} টাকা
+                                        </td>
+
                                         <td className="px-3 py-3 text-right font-semibold">
-                                            {((market.min + market.max) / 2).toLocaleString("bn-BD", {
+                                            {(
+                                                (Number(market.min) +
+                                                    Number(market.max)) /
+                                                2
+                                            ).toLocaleString("bn-BD", {
                                                 maximumFractionDigits: 2,
                                             })} টাকা
                                         </td>
                                     </tr>
                                 ))}
+
+                                {markets.length === 0 && (
+                                    <tr>
+                                        <td
+                                            colSpan={5}
+                                            className="px-3 py-6 text-center text-gray-500"
+                                        >
+                                            এই পণ্যের বাজারভিত্তিক তথ্য পাওয়া যায়নি।
+                                        </td>
+                                    </tr>
+                                )}
                             </tbody>
                         </table>
                     </div>

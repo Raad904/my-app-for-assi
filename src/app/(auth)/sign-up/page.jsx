@@ -10,10 +10,13 @@ import {
     Form,
     Input,
     Label,
-    TextField,
-    toast,
+    TextField
+
 } from "@heroui/react";
+import { toast } from "sonner";
 import { signUp } from "@/lib/auth-client";
+
+
 
 
 const SignUpPage = () => {
@@ -24,26 +27,86 @@ const SignUpPage = () => {
 
         const formData = new FormData(e.currentTarget);
         const data = Object.fromEntries(formData.entries());
-        
+
         console.log("Form Data:", data);
 
-       if (data.password !== data.confirmPassword) {
-    alert("পাসওয়ার্ড দুটি মিলছে না!");
-    return;
-}
+        if (data.password !== data.confirmPassword) {
+            alert("পাসওয়ার্ড দুটি মিলছে না!");
+            return;
+        }
 
-const { data: resData, error } = await signUp.email({
-    name: data.name,
-    email: data.email,
-    password: data.password,
-});
+        const { data: resData, error } = await signUp.email({
+            name: data.name,
+            email: data.email,
+            password: data.password,
+        });
 
-if (error) {
-    alert(error.message || "অ্যাকাউন্ট তৈরি করা যায়নি");
-    return;
-}
+        if (error) {
 
-alert("অ্যাকাউন্ট তৈরি সফল হয়েছে!");
+
+
+            toast.custom(
+                () => (
+                    <div className="flex w-fit max-w-[90vw] items-center gap-2 whitespace-nowrap rounded-lg border border-[#fecaca] bg-[#fff1f2] px-3 py-2 shadow-md">
+                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#dc2626] text-white">
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                className="h-4 w-4"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    d="M12 8v4m0 4h.01M10.3 3.9 2.6 17.2A2 2 0 0 0 4.3 20h15.4a2 2 0 0 0 1.7-2.8L13.7 3.9a2 2 0 0 0-3.4 0Z"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
+                            </svg>
+                        </div>
+
+                        <p className="whitespace-nowrap text-xs font-semibold text-[#991b1b]">
+                            অ্যাকাউন্ট তৈরি করা যায়নি!
+                        </p>
+                    </div>
+                ),
+                {
+                    duration: 2500,
+                    position: "top-center",
+                }
+            );
+
+
+
+
+            return;
+        }
+
+        toast.custom(
+            () => (
+                <div className="flex w-fit max-w-[90vw] items-center gap-2 whitespace-nowrap rounded-lg border border-[#c7e7ce] bg-[#f0faf2] px-3 py-2 shadow-md">
+                    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#078b43] text-white">
+                        <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
+                            <path
+                                d="m5 12 4.5 4.5L19 7"
+                                stroke="currentColor"
+                                strokeWidth="3.5"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            />
+                        </svg>
+                    </div>
+
+                    <p className="whitespace-nowrap text-xs font-semibold text-[#063c20]">
+                        অ্যাকাউন্ট তৈরি সফল হয়েছে!
+                    </p>
+                </div>
+            ),
+            {
+                duration: 2500,
+                position: "top-center",
+            }
+        );
     };
 
     return (
@@ -183,11 +246,6 @@ alert("অ্যাকাউন্ট তৈরি সফল হয়েছে!
                     {/* Social Login */}
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <Button
-                            type="button"
-                            variant="outline"
-                            onPress={() =>
-                                console.log("Google signup clicked")
-                            }
                             className="h-10 w-full rounded-lg border border-[#dce5dc] bg-transparent text-xs font-semibold text-[#303830] hover:bg-[#f0f5f0]"
                         >
                             <span className="text-base font-bold text-[#4285F4]">
@@ -197,9 +255,6 @@ alert("অ্যাকাউন্ট তৈরি সফল হয়েছে!
                         </Button>
 
                         <Button
-                            type="button"
-                            variant="outline"
-                            onPress={() => console.log("GitHub signup clicked")}
                             className="flex h-10 w-full items-center justify-center gap-2 rounded-lg border border-[#dce5dc] bg-transparent px-3 text-xs font-semibold text-[#303830] shadow-none transition hover:bg-[#f0f5f0]"
                         >
                             <svg

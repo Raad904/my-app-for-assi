@@ -3,6 +3,7 @@ import "./globals.css";
 import NavBarPage from "./component/NavBar";
 import HaderPage from "./component/Hader";
 import FoderPage from "./component/Foder";
+import { Toaster } from "sonner";
 
 const notoSerifBengali = Noto_Serif_Bengali({
 
@@ -26,6 +27,7 @@ export default function RootLayout({ children }) {
         <NavBarPage></NavBarPage>
         <main>
           {children}
+          <Toaster position="top-center" />
         </main>
         <FoderPage></FoderPage>
       </body>

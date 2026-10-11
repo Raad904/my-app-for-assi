@@ -3,7 +3,7 @@ import React from 'react';
 
 const CardPage = ({ item }) => {
     return (
-        <Link href={`/AllProduct/${item.id}`}>
+         <Link href={`/AllProduct/${item.id}`}>
             <div
                 className={`cursor-pointer rounded-[18px] border border-[#dfe7df] bg-[#fbfdfb] p-4 transition-all duration-300 ease-out active:scale-95 hover:-translate-y-1 ${item.change?.dir === "up"
                     ? "hover:border-red-400 hover:shadow-[0_0_30px_rgba(239,68,68,0.55),0_0_60px_rgba(239,68,68,0.35)]"
