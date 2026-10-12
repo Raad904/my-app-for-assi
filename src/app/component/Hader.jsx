@@ -120,9 +120,8 @@ const HaderPage = () => {
                             </span>
 
                             <svg
-                                className={`h-3 w-3 text-gray-500 transition-transform ${
-                                    menuOpen ? "rotate-180" : ""
-                                }`}
+                                className={`h-3 w-3 text-gray-500 transition-transform ${menuOpen ? "rotate-180" : ""
+                                    }`}
                                 viewBox="0 0 20 20"
                                 fill="currentColor"
                                 aria-hidden="true"
@@ -137,9 +136,8 @@ const HaderPage = () => {
 
                         {/* Dropdown */}
                         <div
-                            className={`absolute right-0 top-full z-50 w-64 pt-2 ${
-                                menuOpen ? "block" : "hidden"
-                            }`}
+                            className={`absolute right-0 top-full z-50 w-64 pt-2 ${menuOpen ? "block" : "hidden"
+                                }`}
                         >
                             <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white p-2 shadow-lg">
                                 {/* User Info */}
