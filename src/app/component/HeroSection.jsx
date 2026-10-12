@@ -40,12 +40,12 @@ const HeroSectionPage = () => {
                         এবং দামের পরিবর্তন এক জায়গায়!
                     </p>
 
-                    <Link
-                        href="/categories"
+                    <div
+                       
                         className="mt-5 inline-flex rounded-md bg-green-700 px-5 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-green-800"
                     >
                         সব পণ্য দেখুন
-                    </Link>
+                    </div>
                 </div>
 
           
